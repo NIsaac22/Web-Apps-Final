@@ -10,11 +10,13 @@
 {%block body%}
 {%for product in products%}
 <div>
+    <img src="{{ product.image }}" alt="{{ product.name }}" width="100">
     <h2>{{ product.name }}</h2>
     <!-- <p>{{ product.description }}</p>
     <p>Price: ${{ "%.2f"|format(product.price) }}</p>
     <p>Environmental Impact: {{ product.environmental_impact }}</p> -->
     <a href="/add_to_basket/{{ product.id }}">Add to Basket</a>
+    <a href="/product_page/{{ product.id }}">View Product</a>
 </div>
 {%endfor%}
 {%endblock%}

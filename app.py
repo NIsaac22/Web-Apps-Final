@@ -9,13 +9,13 @@ app.secret_key = 'key'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    products = product.query.all()
+    products = Product.query.all()
     return render_template('index.html', products = products)
 
 @app.route('/basket', methods=['GET', 'POST'])
 def basket():
     basket_ids = session.get("basket", [])
-    products = product.query.filter(product.id.in_(basket_ids)).all()
+    products = Product.query.filter(Product.id.in_(basket_ids)).all()
     total = sum(p.price for p in products)
     return render_template('basket.html', products = products, total = total)
 
@@ -27,17 +27,18 @@ def checkout():
 def payment_comfirmation():
     return render_template('payment_comfirmation.html')
 
-@app.route('/product_page', methods=['GET', 'POST'])
-def product_page():
-    return render_template('product_page.html')
+@app.route('/product_page/<int:id>', methods=['GET', 'POST'])
+def product_page(id):
+    prod = Product.query.get(id)
+    return render_template('product_page.html', product = prod)
 
 
 
 def product_data():
     db.create_all()
-    if product.query.count() == 0:
-        p1 = product(name = "Gosling's Black Seal Rum", description = "World Class Bermuda Rum", image = "static/GRum.png", price = 1.99, environmental_impact = 3.5)
-        p2 = product(name = "SmirnoffVodka", description = "Decent Vodka", image = "static/SVodka.png", price = 0.99, environmental_impact = 2.5)
+    if Product.query.count() == 0:
+        p1 = Product(name = "Gosling's Black Seal Rum", description = "World Class Bermuda Rum", image = "static/GRum.png", price = 1.99, environmental_impact = 3.5)
+        p2 = Product(name = "SmirnoffVodka", description = "Decent Vodka", image = "static/SVodka.png", price = 0.99, environmental_impact = 2.5)
         db.session.add(p1)
         db.session.add(p2)
         db.session.commit()
@@ -47,7 +48,7 @@ def init_db():
     product_data()
         
 
-class product(db.Model):
+class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     description = db.Column(db.String(400), unique=True, nullable=True)

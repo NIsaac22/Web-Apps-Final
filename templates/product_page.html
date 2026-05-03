@@ -4,5 +4,10 @@
 {%endblock%}
 
 {%block body%}
-
+<h2>{{ product.name }}</h2>
+<img src="{{ product.image }}" alt="{{ product.name }}" width="1000">
+<p>{{ product.description }}</p>
+<p>Price: ${{ "%.2f"|format(product.price) }}</p>
+<p>Environmental Impact: {{ product.environmental_impact }}</p>
+<a href="/add_to_basket/{{ product.id }}">Add to Basket</a>
 {%endblock%}
