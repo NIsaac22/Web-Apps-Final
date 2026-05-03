@@ -1,0 +1,27 @@
+{%extends "base.html"%}
+{%block head%}
+<h1><a href="/">Home</a></h1>
+<h1>Basket</h1>
+{%endblock%}
+
+{%block body%}
+
+{% if products%}
+<ul>
+    {% for product in products %}
+    <li>
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description }}</p>
+        <p>Price: ${{ "%.2f"|format(product.price) }}</p>
+        <p>Environmental Impact: {{ product.environmental_impact }}</p>
+        <a href="/delete_from_basket/{{ product.id }}">Remove</a>
+    </li>
+    {% endfor %}
+</ul>
+<h2>Total: ${{ "%.2f"|format(total) }} </h2>
+<a href="/checkout">Proceed to Checkout</a>
+{% else %}
+    <p>Your basket is empty.</p>
+{% endif %}
+
+{%endblock%}
