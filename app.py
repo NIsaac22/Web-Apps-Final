@@ -9,13 +9,13 @@ app.secret_key = 'key'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    products = Product.query.all()
+    products = product.query.all()
     return render_template('index.html', products = products)
 
 @app.route('/basket', methods=['GET', 'POST'])
 def basket():
     basket_ids = session.get("basket", [])
-    products = Product.query.filter(Product.id.in_(basket_ids)).all()
+    products = product.query.filter(product.id.in_(basket_ids)).all()
     total = sum(p.price for p in products)
     return render_template('basket.html', products = products, total = total)
 
@@ -29,16 +29,16 @@ def payment_comfirmation():
 
 @app.route('/product_page/<int:id>', methods=['GET', 'POST'])
 def product_page(id):
-    prod = Product.query.get(id)
-    return render_template('product_page.html', product = prod)
+    products = product.query.get(id)
+    return render_template('product_page.html', product = products)
 
 
 
 def product_data():
     db.create_all()
-    if Product.query.count() == 0:
-        p1 = Product(name = "Gosling's Black Seal Rum", description = "World Class Bermuda Rum", image = "static/GRum.png", price = 1.99, environmental_impact = 3.5)
-        p2 = Product(name = "SmirnoffVodka", description = "Decent Vodka", image = "static/SVodka.png", price = 0.99, environmental_impact = 2.5)
+    if product.query.count() == 0:
+        p1 = product(name = "Gosling's Black Seal Rum", description = "World Class Bermuda Rum", image = "/static/GRum.png", price = 1.99, environmental_impact = 3.5)
+        p2 = product(name = "SmirnoffVodka", description = "Decent Vodka", image = "/static/SVodka.png", price = 0.99, environmental_impact = 2.5)
         db.session.add(p1)
         db.session.add(p2)
         db.session.commit()
@@ -48,7 +48,7 @@ def init_db():
     product_data()
         
 
-class Product(db.Model):
+class product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     description = db.Column(db.String(400), unique=True, nullable=True)
