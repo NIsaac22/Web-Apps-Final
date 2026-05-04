@@ -1,24 +1,28 @@
 {%extends "base.html"%}
 
-{%block head%}
-<h1>I AM KING<h1>
-<h1><a href="/basket">Basket</a></h1>
-{%endblock%}
 
-
-
-{%block body%}
+{%block maincontent%}
+<formsort method="GET">
+    <label for="sort">Sort by:</label>
+    <select name="sort" onchange="this.form.submit()">
+        <option value="default">Default</option>
+        <option value="name">Name</option>
+        <option value="price">Price</option>
+        <option value="environmental_impact">Environmental Impact</option>
+    </select>
+</formsort>
 {%for product in products%}
 <div>
     <img src="{{ product.image }}" alt="{{ product.name }}" width="100">
     <h2>{{ product.name }}</h2>
-    <!-- <p>{{ product.description }}</p>
+    <p>{{ product.description }}</p>
     <p>Price: ${{ "%.2f"|format(product.price) }}</p>
-    <p>Environmental Impact: {{ product.environmental_impact }}</p> -->
+    <p>Environmental Impact: {{ product.environmental_impact }}</p>
     <a href="/add_to_basket/{{ product.id }}">Add to Basket</a>
     <a href="/product_page/{{ product.id }}">View Product</a>
 </div>
 {%endfor%}
+
 {%endblock%}
 
 

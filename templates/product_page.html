@@ -1,9 +1,6 @@
 {%extends "base.html"%}
-{%block head%}
-<h1>Product Page</h1>
-{%endblock%}
 
-{%block body%}
+{%block maincontent%}
 <h2>{{ product.name }}</h2>
 <img src="{{ product.image }}" alt="{{ product.name }}" width="1000">
 <p>{{ product.description }}</p>

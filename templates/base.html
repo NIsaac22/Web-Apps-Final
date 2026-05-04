@@ -1,11 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {%block head%}{%endblock%}
-</head>
-<body>
-{%block body%}{%endblock%}
-</body>
-</DOCTYPE>
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Atlantic Liquor{% endblock %}
+
+{% block head %}
+{{ super() }}      
+<link rel="stylesheet" href="{{ url_for('static', filename='BelovedStyling.css') }}">
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Atlantic Liquor</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/basket">Basket</a></li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-bottom: 20px;">
+    {% block maincontent %}{% endblock %}
+</div>
+{% endblock %}

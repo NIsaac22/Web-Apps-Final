@@ -1,8 +1,18 @@
 {%extends "base.html"%}
-{%block head%}
-<h1>Checkout</h1>
-{%endblock%}
 
-{%block body%}
+
+{%block maincontent%}
+<h2> Total: ${{ "%.2f"|format(total) }} </h2>
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+<form method="post">
+    <label for="name">Name on Card:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="card">Card Number:</label>
+    <input type="text" id="card" name="card" required><br><br>
+    <button type="submit">Submit Payment</button>
+</form>
+        
 
 {%endblock%}
