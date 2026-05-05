@@ -20,7 +20,7 @@ def index():
     elif sort == "environmental_impact":
         products = product.query.order_by(product.environmental_impact).all()
     else:
-        products = product.query.all()
+        products = product.query.order_by(product.id).all()
     return render_template('index.html', products = products)
 
 @app.route('/basket', methods=['GET', 'POST'])
@@ -81,23 +81,48 @@ def product_page(id):
     products = product.query.get(id)
     return render_template('product_page.html', product = products)
 
+@app.route('/product_data/<int:id>', methods=['GET', 'POST'])
+def product_data_api(id):
+    p = product.query.get(id)
+    if not p:
+        return flask.jsonify({"error": "Product not found"}), 404
+    return flask.jsonify({
+        "id": p.id,
+        "name": p.name,
+        "description": p.description,
+        "image": p.image,
+        "price": p.price,
+        "environmental_impact": p.environmental_impact
+    })
 
 
 def product_data():
     db.create_all()
     if product.query.count() == 0:
-        p1 = product(name = "Gosling's Black Seal Rum", description = "World Class Bermuda Rum", image = "/static/GRum.png", price = 1.99, environmental_impact = 3.5)
-        p2 = product(name = "SmirnoffVodka", description = "Decent Vodka", image = "/static/SVodka.png", price = 0.99, environmental_impact = 2.5)
-        p3 = product(name = "Bacardi Superior Rum", description = "A light-bodied white rum with a subtle aroma of vanilla and almond", image = "/static/BRum.png", price = 1.49, environmental_impact = 3.0)
-        p4 = product(name = "Don Julio Blanco Tequila", description = "A crisp and clear tequila with a fresh agave flavor", image = "/static/DTequila.png", price = 2.49, environmental_impact = 4.0)
-        p5 = product(name = "Grey Goose Vodka", description = "A premium vodka with a smooth and clean taste", image = "/static/GVodka.png", price = 2.99, environmental_impact = 3.8)
-        p6 = product(name = "El Gobernador Pisco", description = "A Peruvian brandy with a fruity and floral aroma", image = "/static/EPisco.png", price = 1.79, environmental_impact = 2.8)
+        p1 = product(name = "Gosling's Black Seal Rum", description = "World Class Bermuda Rum", image = "/static/GRum.png", price = 24.50, environmental_impact = 1.2)
+        p2 = product(name = "SmirnoffVodka", description = "Decent Vodka", image = "/static/SVodka.png", price = 27.50, environmental_impact = 7.8)
+        p3 = product(name = "Bacardi Superior Rum", description = "A light-bodied white rum with a subtle aroma of vanilla and almond", image = "/static/BRum.png", price = 23.40, environmental_impact = 8.9)
+        p4 = product(name = "Don Julio Blanco Tequila", description = "A crisp and clear tequila with a fresh agave flavor", image = "/static/DTequila.png", price = 29.49, environmental_impact = 6.5)
+        p5 = product(name = "Grey Goose Vodka", description = "A premium vodka with a smooth and clean taste", image = "/static/GVodka.png", price = 34.60, environmental_impact = 4.3)
+        p6 = product(name = "El Gobernador Pisco", description = "A Peruvian brandy with a fruity and floral aroma", image = "/static/EPisco.png", price = 39.95, environmental_impact = 2.8)
+        p7 = product(name="Don Zavier Mamajuana", description="A traditional Caribbean herbal liqueur made by infusing rum with a blend of natural roots, herbs, and spices. Don Zavier Mamajuana offers a rich, earthy flavour with subtle hints of sweetness and warmth, delivering a smooth and unique drinking experience rooted in Dominican heritage.", image="/static/DZM.png", price=63.40, environmental_impact=1.2)
+        p8 = product(name="Aguardiente Amarillo de Manzanares", description="Aguardiente Amarillo de Manzanares is a premium Colombian spirit crafted from sugarcane alcohol and infused with distinctive anise flavours. Recognised for its signature golden-yellow hue, this traditional aguardiente delivers a smooth, crisp taste with subtle herbal notes and a warming finish. Originating from Manzanares, Colombia, it is celebrated for its balanced profile, making it ideal served chilled, neat, or enjoyed during social occasions and celebrations. A true expression of Colombian heritage in every pour. ", image="/static/AADM.png", price=31.50, environmental_impact=2.4)
+        p9 = product(name="Russkaya Vodka", description="Russkaya Vodka is a legendary, historically popular Soviet-era brand created in 1967, known for its traditional 40% ABV, high-quality grain alcohol (wheat and rye), and charcoal/quartz filtration. It offers a creamy, slightly spiced, and smooth flavor profile, often paired with Russian cuisine and recognized for its ""Russian Vodka"" appellation of origin.", image="/static/RVodka.png", price=26.30, environmental_impact=3.5)
+        p10 = product(name="Uvachado", description="Uvachado is a traditional, sweet Peruvian liqueur from the Amazonian region (mainly San Martín) made by macerating black grapes (often Borgogna) in sugarcane aguardiente (cañazo) with honey. Originating around the 1930s in Tarapoto, it is considered an aphrodisiac, a ""trago regional,"" and a celebratory drink", image="/static/Uvachado.png", price=78.40, environmental_impact=1.7)
+        p11 = product(name="Liberte", description="Liberté Black Spiced Rum is a budget-friendly, 40% ABV spiced rum sold at Lidl, often considered a cost-effective alternative to Kraken, costing roughly £15-£16 per 70cl bottle. It is a blend of Trinidadian and Dominican rum, typically featuring strong notes of vanilla, burnt toffee, coffee, and spices.", image="/static/LRum.jpg", price=18.40, environmental_impact=8.9)
+        p12 = product(name="Metaxa 7 Star", description="METAXA is a renowned Greek amber spirit founded in 1888 by Spyros Metaxa, often categorized as a brandy but unique due to its blend of wine distillates, Muscat wines from Samos, and a secret botanical mix. It is characterized by a smooth, sweet, and complex profile, with stars indicating aging (5, 7, 12, and Private Reserve)", image="/static/Metaxa.png", price=37.00, environmental_impact=6.5)
         db.session.add(p1)
         db.session.add(p2)
         db.session.add(p3)
         db.session.add(p4)
         db.session.add(p5)
         db.session.add(p6)
+        db.session.add(p7)
+        db.session.add(p8)
+        db.session.add(p9)
+        db.session.add(p10)
+        db.session.add(p11)
+        db.session.add(p12)
         db.session.commit()
 
 def init_db():
@@ -120,7 +145,9 @@ def add_to_basket(id):
 
     session["basket"].append(id)
     session.modified = True
-    return flask.redirect('/')
+    
+    sort = request.args.get('sort', 'default')
+    return flask.redirect(f'/?sort={sort}')
 
 @app.route('/delete_from_basket/<int:id>', methods=['POST','GET'])
 def delete_from_basket(id):

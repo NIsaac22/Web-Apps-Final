@@ -4,9 +4,27 @@ body{
     color: white;
 }
 
-formsort{
+form{
     color: black;
-    label{
+}
+form label{
         color: white;
     }
+
+.product-img{
+    width: 150px;
+    height: 215px;
+}
+#product-tooltip *{
+    color: black;
+}
+.product-card div.col-md-4{
+    height: 493px;
+    width: 313px;
+    overflow: hidden;
+}
+.navbar-brand{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
 }

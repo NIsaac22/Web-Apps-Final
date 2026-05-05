@@ -2,26 +2,84 @@
 
 
 {%block maincontent%}
-<formsort method="GET">
+<div id="product-tooltip" style="
+display: none; position: fixed; z-index:1000;
+background: white; border: 1px solid #ddd;
+border-radius:8px; padding: 16px; max-width: 280px;
+box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+pointer-events: none;
+" ></div>
+
+<form method="GET">
     <label for="sort">Sort by:</label>
     <select name="sort" onchange="this.form.submit()">
-        <option value="default">Default</option>
-        <option value="name">Name</option>
-        <option value="price">Price</option>
-        <option value="environmental_impact">Environmental Impact</option>
+        <option value="default"{% if request.args.get('sort', 'default') == 'default' %} selected{% endif %}>
+        Default
+        </option>
+        <option value="name" {% if request.args.get('sort') == 'name' %} selected{% endif %}>
+        Name
+        </option>
+        <option value="price" {% if request.args.get('sort') == 'price' %} selected{% endif %}>
+        Price
+        </option>
+        <option value="environmental_impact" {% if request.args.get('sort') == 'environmental_impact' %} selected{% endif %}>
+        Environmental Impact
+        </option>
     </select>
-</formsort>
+</form>
+
 {%for product in products%}
-<div>
-    <img src="{{ product.image }}" alt="{{ product.name }}" width="100">
+<div class="product-card" data-id="{{ product.id }}">
+<div class = "col-md-4" style="border: 1px transparent; padding: 10px; margin: 10px;">
+    <div class="panel panel-default" style="padding: 15px; background: none; height: 100%;">
+    <img src="{{ product.image }}" alt="{{ product.name }}" class="product-img">
     <h2>{{ product.name }}</h2>
-    <p>{{ product.description }}</p>
+    <p>{{ product.description[:60] }}...</p>
     <p>Price: ${{ "%.2f"|format(product.price) }}</p>
     <p>Environmental Impact: {{ product.environmental_impact }}</p>
-    <a href="/add_to_basket/{{ product.id }}">Add to Basket</a>
+    <a href="/add_to_basket/{{ product.id }}?sort={{ request.args.get('sort', 'default') }}">Add to Basket</a>
     <a href="/product_page/{{ product.id }}">View Product</a>
+    </div>
+</div>
 </div>
 {%endfor%}
+<script>
+const tooltip = document.getElementById('product-tooltip');
+let hideTimer = null;
+
+function showTooltip(id,x,y){
+    clearTimeout(hideTimer);
+    fetch(`/product_data/${id}`)
+    .then(response => response.json())
+    .then(data => {
+        tooltip.innerHTML = `
+        <img src="${data.image}" width="100" style="float: right; margin-left: 8px; border-radius: 4px;">
+        <strong>${data.name}</strong><br>
+        <small>${data.description}</small><br><br>
+        <p><b>Price:</b> $${data.price.toFixed(2)}<br></p>
+        <p><b>Environmental Impact:</b> ${data.environmental_impact}</p>
+        `;
+        positionTooltip(x,y);
+        tooltip.style.display = 'block';
+    });
+      
+}
+function positionTooltip(x,y){
+    const pad = 12, tw = 280;
+    const left = (x + pad + tw > window.innerWidth) ? x - tw - pad : x + pad;
+    const top = Math.min(y, window.innerHeight - tooltip.offsetHeight - pad);
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+}
+document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('mouseenter', e => showTooltip(card.dataset.id, e.clientX, e.clientY));
+    card.addEventListener('mousemove', e => positionTooltip(e.clientX, e.clientY));
+    card.addEventListener('mouseleave', () => {
+        hideTimer = setTimeout(() => tooltip.style.display = 'none', 100);
+    });
+});
+</script>
+
 
 {%endblock%}
 
