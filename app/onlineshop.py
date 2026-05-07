@@ -71,7 +71,8 @@ def checkout():
 def payment_comfirmation():
     if request.method == 'GET':
         basket_ids = session.get("basket", [])
-        basket_summary = ", ".join(str(id) for id in basket_ids)
+        items = product.query.filter(product.id.in_(basket_ids)).all()
+        basket_summary = ", ".join(p.name for p in items)
         session["basket"] = []
         session.modified = True
     return render_template('payment_comfirmation.html', summary = basket_summary)
@@ -99,9 +100,9 @@ def product_data_api(id):
 def product_data():
     db.create_all()
     if product.query.count() == 0:
-        p1 = product(name = "Gosling's Black Seal Rum", description = "World Class Bermuda Rum", image = "/static/GRum.png", price = 24.50, environmental_impact = 1.2)
-        p2 = product(name = "SmirnoffVodka", description = "Decent Vodka", image = "/static/SVodka.png", price = 27.50, environmental_impact = 7.8)
-        p3 = product(name = "Bacardi Superior Rum", description = "A light-bodied white rum with a subtle aroma of vanilla and almond", image = "/static/BRum.png", price = 23.40, environmental_impact = 8.9)
+        p1 = product(name = "Gosling's Black Seal Rum", description = "Goslings Black Seal Rum is a renowned 40% ABV, dark bermuda rum known for its rich, complex flavor profile featuring notes of butterscotch, vanilla, and caramel. It is crafted from a blend of pot and continuous still distillates, famously serving as the essential ingredient in the trademarked Dark 'n Stormy cocktail.", image = "/static/GRum.png", price = 24.50, environmental_impact = 1.2)
+        p2 = product(name = "Smirnoff Vodka", description = "Smirnoff is the world's best-selling vodka brand, originally founded in Moscow in 1864. It is known for its triple distillation and 10-stage charcoal filtration process, which creates an exceptionally smooth and neutral spirit.", image = "/static/SVodka.png", price = 27.50, environmental_impact = 7.8)
+        p3 = product(name = "Bacardi Superior Rum", description = "Bacardi Superior (also known as Carta Blanca) is the world's most famous white rum, celebrated for its versatility in cocktails like the Mojito and Daiquiri. Developed by Don Facundo Bacardí Massó in 1862, it was the first 'refined' white rum, designed to be smoother and more mixable than the harsh spirits of that era.", image = "/static/BRum.png", price = 23.40, environmental_impact = 8.9)
         p4 = product(name = "Don Julio Blanco Tequila", description = "A crisp and clear tequila with a fresh agave flavor", image = "/static/DTequila.png", price = 29.49, environmental_impact = 6.5)
         p5 = product(name = "Grey Goose Vodka", description = "A premium vodka with a smooth and clean taste", image = "/static/GVodka.png", price = 34.60, environmental_impact = 4.3)
         p6 = product(name = "El Gobernador Pisco", description = "A Peruvian brandy with a fruity and floral aroma", image = "/static/EPisco.png", price = 39.95, environmental_impact = 2.8)
